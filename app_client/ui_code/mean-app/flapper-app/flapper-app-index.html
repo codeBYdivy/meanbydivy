@@ -1,0 +1,21 @@
+<style>
+.glyphicon-thumbs-up {
+    cursor: pointer
+}
+</style>
+<nav class="navbar navbar-default" ng-controller="FlapperNavController">
+    <ul class="nav navbar-nav">
+        <li style="border: 1px double; padding: 0px 5px;" class="text-primary">
+            <a ui-sref="home"><span class="glyphicon glyphicon-home text-primary" aria-hidden="true"></span></a>
+        </li>
+    </ul>
+    <ul class="nav navbar-nav pull-right">
+        <li ng-show="isLoggedIn()"><a>{{ currentUser().name }}</a></li>
+        <li ng-show="isLoggedIn()"><a href="" ng-click="logOut()">Log Out</a></li>
+        <li ng-hide="isLoggedIn()"><a ui-sref="login">Log In</a></li>
+        <li ng-hide="isLoggedIn()"><a ui-sref="register">Register</a></li>
+    </ul>
+</nav>
+<div class="container">
+    <ui-view></ui-view>
+</div>

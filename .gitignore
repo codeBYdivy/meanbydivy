@@ -1,0 +1,11 @@
+# Dependency directory
+node_modules
+
+# Environment variables
+.env
+
+# nodemon config
+nodemon.json
+
+#mongodb queries
+mongo_queries.js

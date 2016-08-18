@@ -1,0 +1,31 @@
+// form validation
+.form-validation {
+    .ng-pristine {}
+    // When it is first initialized
+    .ng-dirty {}
+    // When the view changes
+    .ng-valid.ng-dirty {
+        border-color: $brand-success;
+    }
+    .ng-invalid.ng-dirty {
+        border-color: $brand-danger;
+    }
+}
+
+input:required,
+select:required,
+textarea:required {
+    border-left: 5px solid $input-border;
+}
+
+textarea {
+    resize: vertical;
+}
+
+.ui-select-multiple.ui-select-bootstrap .ui-select-match .close {
+    line-height: 1;
+}
+
+.uib-rating {
+    outline: none;
+}

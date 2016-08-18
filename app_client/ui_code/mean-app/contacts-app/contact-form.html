@@ -1,0 +1,41 @@
+<div class="row" ng-hide="contact._id">
+  <div class="col-md-6">
+      <h2>Create new contact</h2>
+  </div>
+</div>
+<div class="container">
+  <div>
+    <p>
+      <label for="fname">First Name (required)</label> 
+      <input id="fname" class="form-control" type="text" ng-model="contact.firstName" required> 
+    </p>
+    <p>
+      <label for="lname">Last Name (required)</label> 
+      <input id="lname" class="form-control" type="text" ng-model="contact.lastName" required> 
+    </p>
+    <p>
+      <label for="email">Email (required)</label> 
+      <input id="email" class="form-control" type="text" ng-model="contact.email" required> 
+    </p>
+    <p>
+      <label for="ph-mob">Phone (Mobile)</label> 
+      <input id="ph-mob" class="form-control" type="text" ng-model="contact.phone.mobile"> 
+    </p>
+    <p>
+      <label for="ph-work">Phone (Work)</label> 
+      <input id="ph-work" class="form-control" type="text" ng-model="contact.phone.work"> 
+    </p>
+    <p>
+      <label for="address">Address</label> 
+      <input id="address" class="form-control" type="text" ng-model="contact.address"> 
+    </p>
+    <p>
+      <label for="twit-url">Twitter Handle</label> 
+      <input id="twit-url" class="form-control" type="text" ng-model="contact.twitter"> 
+    </p>
+    <p>
+      <button style="margin-top:20px" class="btn btn-default" ng-click="saveContact(contact)">Save</button>
+      <button style="margin-top:20px" class="btn btn-default" ng-click="back()">Back</button>
+    </p>
+  </div>
+</div>

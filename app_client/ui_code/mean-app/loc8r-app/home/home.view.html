@@ -1,0 +1,137 @@
+<navigation></navigation>
+<div class="container">
+  <page-header content="vm.pageHeader"></page-header>
+  <div class="row">
+    <div class="col-xs-12 col-sm-8">
+      <label for="proximity">Proximity</label>
+      <input id="proximity" type="number" name="proximity" ng-model="vm.proximity" placeholder="specify proximity in kms">
+      <span ng-show="vm.proximity"> kms</span>
+      <a class="pull-right" style="font-size: 30px;">
+        <span class="glyphicon glyphicon-search" ng-click="vm.loadLocations()"></span>
+      </a>
+      <hr/>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 col-sm-8">
+      <label for="filter">Filter results</label>
+      <input id="filter" type="text" name="filter" ng-model="textFilter">
+      <a class="pull-right" title="add new location" style="font-size: 30px;">
+        <span class="glyphicon glyphicon-plus-sign" ng-click="vm.addNewLocationForm()"></span>
+      </a>
+      <div class="error">{{ vm.message }}</div>
+      <hr/>
+      <div class="row list-group">
+        <div class="col-xs-12 list-group-item" ng-repeat="location in vm.data.locations | filter : textFilter">
+          <h4>
+            <a ui-sref="loc8r.location({ locationid: location._id })">{{ location.name }}</a>
+            <small class="rating-stars" rating-stars rating="location.rating"></small>
+            <span class="badge pull-right badge-default">{{ location.distance | formatDistance }}</span>
+          </h4>
+          <p class="address">{{ location.address }}</p>
+          <p>
+            <span class="label label-warning label-facility" ng-repeat="facility in location.facilities">
+              {{ facility }}
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-4">
+      <p class="lead">{{ vm.sidebar.content }}</p>
+    </div>
+  </div>
+  <footer-generic></footer-generic>
+</div>
+<script type="text/ng-template" id="addNewLocationModal">
+  <form name="vm.addLocationForm" role="form" class="form-horizontal form-validation">
+    <div class="modal-header">
+      <h3 class="modal-title">Add a Location @ [
+        <small>
+          <mark>{{vm.marker.coords.latitude}}</mark>,
+          <mark>{{vm.marker.coords.longitude}}</mark>
+        </small>]
+      </h3>
+      <hr/>
+      <ui-gmap-google-map center='vm.map.center' zoom='vm.map.zoom' options="" events="vm.clickMap($event)">
+        <ui-gmap-marker coords="vm.marker.coords" options="vm.marker.options" idkey="vm.marker.id">
+        </ui-gmap-marker>
+      </ui-gmap-google-map>
+    </div>
+    <div class="modal-body">
+      <div role="alert" ng-show="vm.formError" class="alert alert-danger">{{ vm.formError }}</div>
+      <div class="form-group">
+        <label for="name" class="col-sm-2 control-label">Name</label>
+        <div class="col-sm-10">
+          <input type="text" name="name" id="name" class="form-control" placeholder="Enter the name for location" ng-model="vm.newLocation.name" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="address" class="col-sm-2 control-label">Address</label>
+        <div class="col-sm-10">
+          <textarea id="address" name="address" ng-model="vm.newLocation.address" class="form-control"></textarea>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="facilities" class="col-sm-2 control-label">Facilities</label>
+        <div class="col-sm-10">
+          <ui-select multiple tagging tagging-label="(as a facility)" ng-model="vm.newLocation.facilities" title="Enter the facilities">
+            <ui-select-match placeholder="Select facilities...">{{$item}}</ui-select-match>
+            <ui-select-choices repeat="faclty in vm.ALL_FACILITIES | filter:$select.search">
+              {{faclty}}
+            </ui-select-choices>
+          </ui-select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="openingTimes" class="col-sm-2 control-label">Select Days</label>
+        <div class="col-sm-10">
+          <ui-select multiple tagging="vm.tagTransform" ng-model="vm.newLocation.openingTimes" title="Choose days">
+            <ui-select-match placeholder="Select day...">{{$item.days}}</ui-select-match>
+            <ui-select-choices repeat="eachDay in vm.WEEKDAYS | filter: $select.search">
+              {{eachDay.days}}
+            </ui-select-choices>
+          </ui-select>
+        </div>
+      </div>
+      <div class="form-group" ng-show="vm.newLocation.openingTimes.length">
+        <div class="col-sm-4 col-sm-offset-2">
+          <ul class="list-group">
+            <li ng-repeat="eachDay in vm.newLocation.openingTimes" class="list-group-item list-group-item{{eachDay.closed ? '-danger' : '-success'}}" ng-click="vm.editTiming(eachDay)">
+              <span class="badge" ng-hide="eachDay.closed">
+                {{eachDay.opening | date:'shortTime' }} - {{eachDay.closing | date:'shortTime' }}
+              </span>
+              {{eachDay.days}}
+            </li>
+          </ul>
+        </div>
+        <div class="col-sm-6" ng-show="vm.editDay">
+          <div class="col-sm-12 text-center form-group">
+            {{vm.editDay.days}}
+            <button type="button" class="btn btn-xs btn{{vm.editDay.closed ? '-danger' : '-success'}}" ng-model="vm.editDay.closed" uib-btn-checkbox>
+              {{vm.editDay.closed ? 'CLOSED' : 'OPEN'}}
+            </button>
+          </div>
+          <div class="form-group col-xs-6" ng-hide="vm.editDay.closed">
+            <div uib-timepicker ng-model="vm.editDay.opening"></div>
+          </div>
+          <div class="form-group col-xs-6 pull-right" ng-hide="vm.editDay.closed">
+            <div uib-timepicker ng-model="vm.editDay.closing"></div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="rating" class="col-xs-10 col-sm-2 control-label">Rating</label>
+        <div class="col-xs-12 col-sm-3">
+          <label style="font-size:20px; padding-top: 3px;">
+            <span uib-rating ng-model="vm.newLocation.rating" max="5" class="uib-rating"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" type="button" ng-disabled="vm.addLocationForm.$invalid" ng-click="vm.addLocation(vm.newLocation)">Add</button>
+      <button class="btn btn-warning" type="button" ng-click="vm.modal.cancel()">Cancel</button>
+    </div>
+  </form>
+</script>
