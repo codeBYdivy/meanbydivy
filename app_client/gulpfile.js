@@ -37,8 +37,8 @@ pipes.orderedAppScripts = function() {
 
 pipes.minifiedFileName = function() {
     return plugins.rename(function(path) {
-        // path.extname = '.min' + path.extname;
-        path.extname = randomstring.generate() + path.extname;
+        path.extname = '.min' + path.extname;
+        // path.extname = randomstring.generate() + path.extname;
     });
 };
 
@@ -60,8 +60,8 @@ pipes.builtAppScriptsProd = function() {
     return es.merge(scriptedPartials, validatedAppScripts)
         .pipe(pipes.orderedAppScripts())
         .pipe(plugins.sourcemaps.init())
-        // .pipe(plugins.concat('app.min.js'))
-        .pipe(plugins.concat('a' + randomstring.generate() + '.js'))
+        .pipe(plugins.concat('app.min.js'))
+        // .pipe(plugins.concat('a' + randomstring.generate() + '.js'))
         .pipe(plugins.uglify())
         .pipe(plugins.sourcemaps.write())
         .pipe(gulp.dest(paths.distScriptsProd));
@@ -75,8 +75,8 @@ pipes.builtVendorScriptsDev = function() {
 pipes.builtVendorScriptsProd = function() {
     return gulp.src(bowerFiles('**/*.js'))
         .pipe(pipes.orderedVendorScripts())
-        // .pipe(plugins.concat('vendor.min.js'))
-        .pipe(plugins.concat('v' + randomstring.generate() + '.js'))
+        .pipe(plugins.concat('vendor.min.js'))
+        // .pipe(plugins.concat('v' + randomstring.generate() + '.js'))
         .pipe(plugins.uglify())
         .pipe(gulp.dest(paths.distScriptsProd));
 };
