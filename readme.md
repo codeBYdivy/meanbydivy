@@ -1,4 +1,4 @@
-# meanBydivy
+# meanBydivy 
 
 # npm start (simple starts app with logging in console)
 
